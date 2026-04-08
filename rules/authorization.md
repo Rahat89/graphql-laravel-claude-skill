@@ -46,7 +46,7 @@ class MyPostsQuery extends Query
 
 ### Token/API Key Authorization
 
-For APIs that accept tokens or API keys instead of session auth:
+For APIs that accept tokens or API keys instead of session auth. Tokens can come from headers, args, or both — check headers first, then fall back to args:
 
 ```php
 trait TokenAuthorizable
@@ -55,14 +55,41 @@ trait TokenAuthorizable
 
     public function authorize($root, array $args, $ctx, $resolveInfo = null): bool
     {
-        $this->user = User::where('api_token', $args['token'] ?? '')->first()
-            ?? User::where('api_key', $args['api_key'] ?? '')->first();
+        $user = $this->resolveUser($args);
 
-        if (!$this->user) {
+        if (!$user) {
             throw new \Rebing\GraphQL\Error\AuthorizationError('Invalid credentials');
         }
 
+        $this->user = $user;
+
         return true;
+    }
+
+    protected function resolveUser(array $args): ?User
+    {
+        // 1. Check Authorization header (Bearer token)
+        $bearerToken = request()->bearerToken();
+        if ($bearerToken) {
+            return User::where('api_token', $bearerToken)->first();
+        }
+
+        // 2. Check custom header (e.g., X-API-Key)
+        $apiKey = request()->header('X-API-Key');
+        if ($apiKey) {
+            return User::where('api_key', $apiKey)->first();
+        }
+
+        // 3. Fall back to args (for clients that pass credentials in the query)
+        if (!empty($args['token'])) {
+            return User::where('api_token', $args['token'])->first();
+        }
+
+        if (!empty($args['api_key'])) {
+            return User::where('api_key', $args['api_key'])->first();
+        }
+
+        return null;
     }
 }
 ```
@@ -74,6 +101,8 @@ public function resolve($root, array $args, $context, PostService $postService)
     return $postService->getUserPosts($this->user, $args);
 }
 ```
+
+> **Note:** Prefer header-based auth (Bearer token, custom headers) over passing tokens in GraphQL args. Headers keep credentials out of query logs and caches. Support args as a fallback for clients that can't set headers (e.g., some WordPress plugins).
 
 ### Schema-Specific Auth
 

@@ -119,8 +119,10 @@ trait PluginAuthorizable
 {
     public function authorize($root, array $args, $ctx, $resolveInfo = null): bool
     {
-        // Validate user + domain ownership
-        $user = User::where('api_key', $args['api_key'])->first();
+        // Resolve user from header or args
+        $apiKey = request()->header('X-API-Key') ?? ($args['api_key'] ?? null);
+        $user = $apiKey ? User::where('api_key', $apiKey)->first() : null;
+
         return $user && $this->validateDomain($user, $args);
     }
 }

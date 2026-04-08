@@ -71,10 +71,11 @@ rules/
 
 This skill is designed to be customized for your project. Common modifications:
 
-- **Add your Helper methods** — If you have `Helper::paginationArgs()` or `Helper::tokenOrApi()`, reference them in the rules
+- **Add your Helper methods** — If you have helpers like `Helper::paginationArgs()`, reference them in the rules
 - **Add your auth traits** — Replace generic examples with your project's actual auth trait names
 - **Add your response types** — If you use a `ResponseType`, document it in error-handling.md
 - **Add project conventions** — Base classes, naming patterns, schema names
+- **Add your auth strategy** — Token via headers, args, or both — update authorization.md to match
 
 ## Contributing
 
