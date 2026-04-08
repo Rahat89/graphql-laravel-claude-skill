@@ -23,7 +23,7 @@ Copy the `SKILL.md` and `rules/` directory into your project's `.claude/skills/g
 mkdir -p .claude/skills/graphql-development
 
 # Clone and copy
-git clone https://github.com/developer-jetwing/graphql-laravel-claude-skill.git /tmp/graphql-skill
+git clone https://github.com/Rahat89/graphql-laravel-claude-skill.git /tmp/graphql-skill
 cp /tmp/graphql-skill/SKILL.md .claude/skills/graphql-development/
 cp -r /tmp/graphql-skill/rules .claude/skills/graphql-development/
 rm -rf /tmp/graphql-skill
@@ -32,7 +32,7 @@ rm -rf /tmp/graphql-skill
 Or add as a git submodule:
 
 ```bash
-git submodule add https://github.com/developer-jetwing/graphql-laravel-claude-skill.git .claude/skills/graphql-development
+git submodule add https://github.com/Rahat89/graphql-laravel-claude-skill.git .claude/skills/graphql-development
 ```
 
 ## Structure

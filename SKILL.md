@@ -3,7 +3,7 @@ name: graphql-laravel
 description: "Use this skill whenever creating, modifying, or reviewing GraphQL types, queries, mutations, enums, input types, interfaces, unions, scalars, traits, or middleware using rebing/graphql-laravel. Triggers when working with GraphQL schema config, pagination types, authorization patterns, resolver middleware, or any file under app/GraphQL/. Also activate when the user mentions GraphQL endpoints, GraphQL types, or API schema changes in a Laravel project."
 license: MIT
 metadata:
-  author: developer-jetwing
+  author: Rahat89
   package: rebing/graphql-laravel
   requires: PHP 8.2+, Laravel 12+
 ---
