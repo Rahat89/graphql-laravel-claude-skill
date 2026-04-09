@@ -108,11 +108,11 @@ public function resolve($root, array $args, $context, PostService $postService)
 
 Different schemas may need different auth strategies:
 
-- **Public API schema** — Token-based auth, validates user exists and is verified
-- **Plugin/External schema** — Token + domain validation, validates the requesting domain is authorized
+- **Public API schema** — Token-based auth (Bearer header or args)
 - **Admin schema** — Session auth + role check
+- **External/partner schema** — API key auth with additional validation
 
-Create separate traits for each and use the right one per schema. Never mix auth strategies across schemas.
+Create separate traits for each and use the right one per schema. Don't mix auth strategies across schemas.
 
 ## Field-Level Privacy
 

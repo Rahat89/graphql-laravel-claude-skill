@@ -102,11 +102,11 @@ trait Authorizable
 
 ### Schema-Specific Auth Traits
 
-For projects with multiple schemas (e.g., frontend API vs. plugin API), create separate auth traits:
+For projects with multiple schemas, create separate auth traits per schema:
 
 ```php
-// For standard API endpoints
-trait ApiAuthorizable
+// Session-based auth (web/admin schemas)
+trait SessionAuthorizable
 {
     public function authorize($root, array $args, $ctx, $resolveInfo = null): bool
     {
@@ -114,21 +114,22 @@ trait ApiAuthorizable
     }
 }
 
-// For plugin/external endpoints with domain validation
-trait PluginAuthorizable
+// Token-based auth (API schemas)
+trait TokenAuthorizable
 {
+    public $user;
+
     public function authorize($root, array $args, $ctx, $resolveInfo = null): bool
     {
-        // Resolve user from header or args
-        $apiKey = request()->header('X-API-Key') ?? ($args['api_key'] ?? null);
-        $user = $apiKey ? User::where('api_key', $apiKey)->first() : null;
+        $token = request()->bearerToken() ?? ($args['token'] ?? null);
+        $this->user = $token ? User::where('api_token', $token)->first() : null;
 
-        return $user && $this->validateDomain($user, $args);
+        return (bool) $this->user;
     }
 }
 ```
 
-**Important:** Use the right auth trait for the right schema. Plugin-specific auth (with domain validation) should never be used on public API endpoints.
+If your project has multiple schemas, keep one auth trait per schema and don't mix them across schemas.
 
 ## Field Resolver Traits (on Types)
 
