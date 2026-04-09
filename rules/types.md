@@ -116,7 +116,7 @@ trait ThumbnailResolver
 }
 
 // Usage
-class ItemType extends GraphQLType
+class PostType extends GraphQLType
 {
     use ThumbnailResolver;
     // ...

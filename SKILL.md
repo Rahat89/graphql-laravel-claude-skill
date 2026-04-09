@@ -20,7 +20,7 @@ Before applying any rule, check what the project already does. Look at sibling f
 
 1. **Thin resolvers, fat services** — Queries and mutations delegate business logic to Service classes. The `resolve()` method is glue code only.
 2. **DRY via traits** — When the same endpoint exists as both a Query and Mutation, all logic lives in a shared trait. Never duplicate resolver code.
-3. **Consistent arguments** — Use helper methods for repeated argument patterns (pagination, auth). Define them once, reuse everywhere.
+3. **Centralize repetitive args** — Extract repeated argument definitions (pagination, sorting, filtering) into static helper methods. Define once, reuse via `array_merge` everywhere.
 4. **Auth only when needed** — Don't add authorization by default. Only use `authorize()` when the endpoint explicitly requires authentication.
 5. **Register everything** — All types, queries, mutations must be registered in `config/graphql.php`. Easy to forget, hard to debug.
 
@@ -38,7 +38,7 @@ Before applying any rule, check what the project already does. Look at sibling f
 ### 2. Queries → `rules/queries.md`
 
 - Extend a project-level base Query (or Rebing's `Query` directly)
-- Use helper methods for pagination and auth arguments
+- Centralize repeated args (pagination, sorting) in static helper methods
 - Return paginated types via `GraphQL::paginate('typeName')`
 - Delegate to Service classes in resolve
 - Use `authorize()` only when auth is explicitly required
@@ -82,7 +82,7 @@ Before applying any rule, check what the project already does. Look at sibling f
 ### 8. Pagination → `rules/pagination.md`
 
 - `GraphQL::paginate()`, `simplePaginate()`, `cursorPaginate()` for return types
-- Centralize pagination arguments in a helper
+- Centralize repeated args (pagination, sorting) in static helpers
 - Extend `PaginationType` for custom pagination fields if needed
 
 ### 9. Authorization & Privacy → `rules/authorization.md`

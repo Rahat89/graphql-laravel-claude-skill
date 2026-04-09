@@ -114,15 +114,14 @@ trait SessionAuthorizable
     }
 }
 
-// Token-based auth (API schemas)
+// Token-based auth (API schemas — works with Sanctum, Passport, etc.)
 trait TokenAuthorizable
 {
     public $user;
 
     public function authorize($root, array $args, $ctx, $resolveInfo = null): bool
     {
-        $token = request()->bearerToken() ?? ($args['token'] ?? null);
-        $this->user = $token ? User::where('api_token', $token)->first() : null;
+        $this->user = auth()->user();
 
         return (bool) $this->user;
     }

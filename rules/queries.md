@@ -187,7 +187,7 @@ class PostsQuery extends Query
 
 1. **Always** delegate to a Service class — no business logic in resolve
 2. **Only** add `authorize()` when authentication is explicitly required
-3. **Centralize** repeated argument patterns (pagination, auth) in helper methods
+3. **Centralize** repeated argument patterns (pagination, sorting, filtering) in static helper methods
 4. When the same endpoint exists as both Query and Mutation, use a shared trait
 5. Register all queries in `config/graphql.php` under the appropriate schema
 6. Use `GraphQL::paginate()` for list endpoints, bare `GraphQL::type()` for single resources

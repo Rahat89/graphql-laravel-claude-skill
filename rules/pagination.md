@@ -52,35 +52,33 @@ In resolve:
 return Post::cursorPaginate($args['per_page'], ['*'], 'cursor', $args['cursor']);
 ```
 
-## Centralizing Pagination Arguments
+## Centralizing Repetitive Arguments
 
-Create a helper to avoid repeating pagination args across every query:
+When the same arguments appear across many queries, extract them into a static method to keep definitions consistent and DRY. Pagination is the most common example:
 
 ```php
-class Helper
+// In a helper class, base query, or a dedicated GraphQL args class — your choice
+public static function paginationArgs(): array
 {
-    public static function paginationArgs(): array
-    {
-        return [
-            'page' => [
-                'type' => Type::int(),
-                'defaultValue' => 1,
-            ],
-            'per_page' => [
-                'type' => Type::int(),
-                'defaultValue' => 15,
-            ],
-        ];
-    }
+    return [
+        'page' => [
+            'type' => Type::int(),
+            'defaultValue' => 1,
+        ],
+        'per_page' => [
+            'type' => Type::int(),
+            'defaultValue' => 15,
+        ],
+    ];
 }
 ```
 
-Usage:
+Usage via `array_merge`:
 ```php
 public function args(): array
 {
     return array_merge(
-        Helper::paginationArgs(),
+        YourArgsClass::paginationArgs(),
         [
             'search' => ['type' => Type::string()],
             // ... other args
@@ -88,6 +86,8 @@ public function args(): array
     );
 }
 ```
+
+This pattern works for any repeated arg group — sorting, date range filters, common search params, etc. The key is: define once, reuse everywhere.
 
 ## Custom PaginationType
 

@@ -23,50 +23,36 @@ Extend `RuntimeException`. Configuration/developer mistakes. NOT client-safe.
 
 ## Error Handling in Mutations
 
-Always wrap service calls in try/catch:
+Wrap service calls in try/catch and throw a GraphQL error:
 
 ```php
 public function resolve($root, array $args, $context, PostService $postService)
 {
     try {
-        $post = $postService->create(auth()->user(), $args);
-        return $post;
+        return $postService->create(auth()->user(), $args);
     } catch (\Exception $e) {
         throw new \GraphQL\Error\Error($e->getMessage());
     }
 }
 ```
 
-### With a ResponseType Pattern
+### Alternative: ResponseType Pattern
 
-If your project uses a generic response type:
+Some projects define a generic response type (with `status`, `message` fields) and return structured arrays instead of throwing errors. This is a valid approach when mutations don't return a model:
 
 ```php
 public function resolve($root, array $args, $context, PostService $postService)
 {
     try {
-        $postService->create(auth()->user(), $args);
-        return ['status' => true, 'message' => 'Post created successfully'];
+        $postService->delete(auth()->user(), $args['id']);
+        return ['status' => true, 'message' => 'Post deleted successfully'];
     } catch (\Exception $e) {
         return ['status' => false, 'message' => $e->getMessage()];
     }
 }
 ```
 
-Tip: Create helper methods for consistent responses:
-
-```php
-// In a Helper class
-public static function successResponse(string $message): array
-{
-    return ['status' => true, 'message' => $message];
-}
-
-public static function errorResponse(string $message): array
-{
-    return ['status' => false, 'message' => $message];
-}
-```
+If your project uses this pattern, centralize the response structure in a helper method to keep it consistent across mutations.
 
 ## Authorization Errors
 

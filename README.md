@@ -8,10 +8,10 @@ This skill makes Claude Code understand how to properly structure a production G
 
 - **Thin resolvers** — Business logic delegated to Service classes
 - **DRY code via traits** — Shared resolver logic for Query/Mutation pairs
-- **Consistent patterns** — Centralized pagination args, auth helpers, error responses
+- **Consistent patterns** — Centralized repetitive args, structured error responses
 - **Proper authorization** — Auth traits, field-level privacy, schema-specific strategies
 - **Validation** — Inline rules, custom messages, custom closures
-- **Multiple schemas** — Separate schemas for different API surfaces (frontend, plugin, admin)
+- **Multiple schemas** — Separate schemas for different API surfaces (public, admin, partner)
 - **Testing** — Integration tests for queries, mutations, auth, and validation
 
 ## Installation
@@ -71,7 +71,7 @@ rules/
 
 This skill is designed to be customized for your project. Common modifications:
 
-- **Add your Helper methods** — If you have helpers like `Helper::paginationArgs()`, reference them in the rules
+- **Add your helper methods** — If you centralize pagination or other args in a helper class, reference it in the rules
 - **Add your auth traits** — Replace generic examples with your project's actual auth trait names
 - **Add your response types** — If you use a `ResponseType`, document it in error-handling.md
 - **Add project conventions** — Base classes, naming patterns, schema names
